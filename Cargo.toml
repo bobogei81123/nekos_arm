@@ -1,0 +1,15 @@
+[package]
+name = "nekos_arm"
+version = "0.1.0"
+authors = ["Meteor <bobogei81123@gmail.com>"]
+edition = "2018"
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+
+[dependencies]
+cortex-a = "5.1"
+register = "1.0"
