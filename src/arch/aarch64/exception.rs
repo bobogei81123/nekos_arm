@@ -29,7 +29,7 @@ struct EsrEL1;
 
 /// Prints verbose information about the exception and then panics.
 fn default_exception_handler(e: &ExceptionContext) {
-    crate::println!(
+    crate::print!(
         "\n\nCPU Exception!\n\
          FAR_EL1: {:#018x}\n\
          {}",
@@ -123,13 +123,13 @@ impl fmt::Display for ExceptionContext {
 pub unsafe fn handling_init() {
     // Provided by exception.S.
     extern "Rust" {
-        static __exception_vector_start: UnsafeCell<()>;
+        static __EXCEPTION_VECTOR_START: UnsafeCell<()>;
     }
 
-    VBAR_EL1.set(__exception_vector_start.get() as u64);
-
-    // Force VBAR update to complete before next instruction.
-    barrier::isb(barrier::SY);
+    unsafe {
+        VBAR_EL1.set(__EXCEPTION_VECTOR_START.get() as u64);
+        barrier::isb(barrier::SY);
+    }
 }
 
 /// The processing element's current privilege level.

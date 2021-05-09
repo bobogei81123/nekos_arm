@@ -13,3 +13,8 @@ panic = "abort"
 [dependencies]
 cortex-a = "5.1"
 register = "1.0"
+
+[dependencies.spin]
+version = "0.9"
+default-features = false
+features = ["mutex", "spin_mutex"]

@@ -47,7 +47,7 @@
 .align 11
 
 // Export a symbol for the Rust code to use.
-__exception_vector_start:
+__EXCEPTION_VECTOR_START:
 
 .org 0x200
     CALL_WITH_CONTEXT current_elx_synchronous

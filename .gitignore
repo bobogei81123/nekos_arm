@@ -1,1 +1,4 @@
 /target
+.gdb_history
+*.img
+*.rustfmt

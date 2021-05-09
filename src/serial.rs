@@ -1,8 +1,8 @@
 struct SerialWriter;
 
+use crate::{singleton::Singleton, sync::SpinMutex};
 use core::fmt::{self, Write};
 use core::ptr;
-use crate::crazy::CrazyCell;
 
 const UART0: *mut u8 = 0x0900_0000 as *mut u8;
 
@@ -18,16 +18,13 @@ impl Write for SerialWriter {
     }
 }
 
-static SERIAL: CrazyCell<SerialWriter> = CrazyCell::new(SerialWriter {});
-
-#[doc(hidden)]
-unsafe fn mutable_serial() -> &'static mut SerialWriter {
-    &mut *SERIAL.get()
-}
+static SERIAL: Singleton<SpinMutex<SerialWriter>> =
+    Singleton::new_with(SpinMutex::new(SerialWriter {}));
 
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
-    unsafe { mutable_serial() }.write_fmt(args).unwrap();
+    let mut serial = SERIAL.get().lock();
+    serial.write_fmt(args).unwrap();
 }
 
 #[macro_export]

@@ -22,6 +22,6 @@
     "sysv64"
   ],
   "pre-link-args": {
-    "ld.lld": ["-Taarch64-qemu.ld"]
+    "ld.lld": ["-Tsrc/arch/aarch64/aarch64.ld"]
   }
 }
