@@ -6,4 +6,4 @@ build-std-features = ["compiler-builtins-mem"]
 target = "./src/arch/aarch64/aarch64-unknown-none-softfloat.json"
 
 [target.'cfg(target_os = "none")']
-runner = "qemu-system-aarch64 -machine virt -m 1024M -cpu cortex-a53 -nographic -kernel"
+runner = "qemu-system-aarch64 -machine virt -m 1G -cpu cortex-a53 -nographic -kernel"

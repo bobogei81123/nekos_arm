@@ -14,7 +14,8 @@ const STACK_SIZE: usize = 1024 * 1024;
 impl Thread {
     pub fn new(func: fn()) -> Self {
         let mut stack = Vec::new();
-        stack.try_reserve_exact(STACK_SIZE)
+        stack
+            .try_reserve_exact(STACK_SIZE)
             .expect("could not allocate stack");
         stack.resize(STACK_SIZE, 0);
         let stack = stack.into_boxed_slice();

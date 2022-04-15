@@ -16,7 +16,7 @@ SECTIONS
         __EXT_BSS_END_INCLUSIVE = . - 8;
     }
 
-    . = ALIGN(8);
+    . = ALIGN(0x1000);
     . = . + 0x4000;
     __EXT_STACK_END = .;
 }

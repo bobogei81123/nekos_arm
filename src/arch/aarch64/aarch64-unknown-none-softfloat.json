@@ -4,7 +4,6 @@
   "disable-redzone": true,
   "executables": true,
   "features": "+strict-align,-neon,-fp-armv8",
-  "is-builtin": true,
   "linker": "rust-lld",
   "linker-flavor": "ld.lld",
   "linker-is-gnu": true,
@@ -13,14 +12,6 @@
   "panic-strategy": "abort",
   "relocation-model": "static",
   "target-pointer-width": "64",
-  "unsupported-abis": [
-    "stdcall",
-    "fastcall",
-    "vectorcall",
-    "thiscall",
-    "win64",
-    "sysv64"
-  ],
   "pre-link-args": {
     "ld.lld": ["-Tsrc/arch/aarch64/aarch64.ld"]
   }

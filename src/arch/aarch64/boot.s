@@ -9,7 +9,7 @@ _start:
     str     x0, [x30]
     ldr     x30, =__EXT_STACK_END
     mov     sp, x30
-    bl      main
+    bl      _main
 
 // TODO: get PSCI address from FDT instead
 .equ PSCI_SYSTEM_OFF, 0x84000008

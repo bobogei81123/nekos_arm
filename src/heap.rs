@@ -1,4 +1,4 @@
-use crate::{println, sync::SpinMutex, utils::align_up};
+use crate::{allocator::{PAGE_ALLOCATOR, PAGE_SIZE}, println, sync::SpinMutex, utils::{self, align_down, align_up}};
 use core::{
     alloc::{GlobalAlloc, Layout},
     mem, ptr,
@@ -12,14 +12,12 @@ fn alloc_error_handler(layout: alloc::alloc::Layout) -> ! {
     panic!("allocation error: {:?}", layout)
 }
 
-pub fn heap_init(start: u64, size: u64) {
-    extern "Rust" {
-        static __EXT_STACK_END: ();
-    }
-
+pub fn heap_init(size: usize) {
+    let size = align_down(size, PAGE_SIZE);
+    let mut page_allocator = PAGE_ALLOCATOR.get().lock();
     unsafe {
-        let heap_start = align_up(&__EXT_STACK_END as *const () as usize + 0x1000, 0x1000);
-        let heap_end = (start + size) as usize;
+        let heap_start = page_allocator.get_n_pages(size / PAGE_SIZE).expect("Can't allocate for heap");
+        let heap_end = heap_start + size;
         ALLOCATOR.init(heap_start, heap_end - heap_start)
     }
 }

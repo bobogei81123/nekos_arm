@@ -1,8 +1,8 @@
 use core::{cell::UnsafeCell, fmt};
-use cortex_a::{asm, barrier, regs::*};
-use register::InMemoryRegister;
+use cortex_a::{asm, registers::*};
+use tock_registers::{interfaces::*, registers::InMemoryRegister};
 
-global_asm!(include_str!("exception.s"));
+core::arch::global_asm!(include_str!("exception.s"));
 
 /// Wrapper struct for memory copy of SPSR_EL1.
 #[repr(transparent)]
@@ -128,7 +128,7 @@ pub unsafe fn handling_init() {
 
     unsafe {
         VBAR_EL1.set(__EXCEPTION_VECTOR_START.get() as u64);
-        barrier::isb(barrier::SY);
+        asm::barrier::isb(asm::barrier::SY);
     }
 }
 

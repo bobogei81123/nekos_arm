@@ -1,8 +1,9 @@
 use crate::thread::Thread;
 
-use cortex_a::regs::{RegisterReadWrite, TPIDR_EL1};
+use cortex_a::registers::TPIDR_EL1;
+use tock_registers::interfaces::*;
 
-global_asm!(include_str!("routine.s"));
+core::arch::global_asm!(include_str!("routine.s"));
 
 #[repr(C)]
 #[derive(Default, Debug)]

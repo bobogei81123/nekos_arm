@@ -1,30 +1,32 @@
-struct SerialWriter;
-
+use crate::bsp;
 use crate::{singleton::Singleton, sync::SpinMutex};
 use core::fmt::{self, Write};
 use core::ptr;
 
-const UART0: *mut u8 = 0x0900_0000 as *mut u8;
+static_assertions::assert_impl_all!(bsp::Serial: embedded_hal::serial::Write<u8>);
 
-impl Write for SerialWriter {
-    fn write_str(&mut self, s: &str) -> fmt::Result {
-        // TODO: handle utf-8
-        for byte in s.bytes() {
-            unsafe {
-                ptr::write_volatile(UART0, byte);
-            }
-        }
-        Ok(())
+struct Serial {
+    bsp: bsp::Serial,
+}
+
+impl Serial {
+    fn new() -> Self {
+        Self { bsp: bsp::Serial::new() }
     }
 }
 
-static SERIAL: Singleton<SpinMutex<SerialWriter>> =
-    Singleton::new_with(SpinMutex::new(SerialWriter {}));
+static SERIAL: Singleton<SpinMutex<Serial>> = Singleton::new();
+
+pub fn serial_init() {
+    unsafe { SERIAL.init(SpinMutex::new(Serial::new())); }
+}
 
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
     let mut serial = SERIAL.get().lock();
-    serial.write_fmt(args).unwrap();
+    (&mut serial.bsp as &mut dyn embedded_hal::serial::Write<u8, Error = !>)
+        .write_fmt(args)
+        .unwrap();
 }
 
 #[macro_export]

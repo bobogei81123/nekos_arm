@@ -60,14 +60,18 @@ pub unsafe fn align_to(ptr: *const u8, align: usize) -> *const u8 {
     align_up(ptr as _, align) as _
 }
 
+/// Returns the value of `addr` aligned up to `align`.
 pub fn align_up(addr: usize, align: usize) -> usize {
     assert!(align.is_power_of_two(), "`align` must be a power of 2");
 
-    if align == 0 {
-        addr
-    } else {
-        (addr + align - 1) & !(align - 1)
-    }
+    (addr + align - 1) & !(align - 1)
+}
+
+/// Returns the value of `addr` aligned down to `align`.
+pub fn align_down(addr: usize, align: usize) -> usize {
+    assert!(align.is_power_of_two(), "`align` must be a power of 2");
+
+    addr & !(align - 1)
 }
 
 #[macro_export]

@@ -2,17 +2,23 @@
 name = "nekos_arm"
 version = "0.1.0"
 authors = ["Meteor <bobogei81123@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
-[profile.dev]
-panic = "abort"
-
-[profile.release]
-panic = "abort"
+[features]
+bsp_qemu = []
+bsp_pinephone = []
+default = ["bsp_qemu"]
 
 [dependencies]
-cortex-a = "5.1"
-register = "1.0"
+cortex-a = "7.0"
+embedded-hal = "0.2.6"
+nb = "1.0"
+static_assertions = "1.1"
+
+[dependencies.tock-registers]
+version = "0.7"
+default-features = false
+features = ["register_types"]
 
 [dependencies.spin]
 version = "0.9"
